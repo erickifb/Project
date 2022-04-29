@@ -9,16 +9,12 @@ class DataQualityOperator(BaseOperator):
     @apply_defaults
     def __init__(self,
                  # Define your operators params (with defaults) here
-                 # Example:
-                 # conn_id = your-connection-name
-                 redshift_conn_id,
-                 tables,
+                 redshift_conn_id = '',
+                 tables = {},
                  *args, **kwargs):
 
         super(DataQualityOperator, self).__init__(*args, **kwargs)
         # Map params here
-        # Example:
-        # self.conn_id = conn_id
         self.redshift_conn_id = redshift_conn_id
         self.tables = tables,
         
@@ -32,11 +28,11 @@ class DataQualityOperator(BaseOperator):
             field = list(self.tables.values())[tbl][1]
             
             # Quality check 1 - check that dimension tables have rows
-            custom_sql = f"SELECT Count(*) FROM {table}"
+            custom_sql = "SELECT Count(*) FROM {}".format(table)
             rows = redshift.get_first(custom_sql) 
-            self.log.info(f'Table: {table} has {rows} rows')
+            self.log.info('Table: {} has {} rows'.format(table, rows))
             
             # Quality check 2 - check that key fields dont have null entries
-            custom_sql = f"SELECT Count(*) FROM {table} where {field} IS NULL"
+            custom_sql = "SELECT count(*) FROM {} where {} IS NULL".format(table, field)
             rows = redshift.get_first(custom_sql) 
-            self.log.info(f'Field: "{field}" in table: {table} has {rows} NULL rows')
+            self.log.info('Field: {} in table: {} has {} NULL rows'.format(field, table, rows))

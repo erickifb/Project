@@ -9,7 +9,7 @@ class LoadDimensionOperator(BaseOperator):
     @apply_defaults
     def __init__(self,
                  # Define your operators params (with defaults) here
-                 task_id = '',
+                 #task_id = '',
                  table = '',
                  redshift_conn_id = '',
                  sql = '',
@@ -19,7 +19,7 @@ class LoadDimensionOperator(BaseOperator):
         super(LoadDimensionOperator, self).__init__(*args, **kwargs)
        
         # Map params here
-        self.task_id = task_id        
+        #self.task_id = task_id        
         self.table = table        
         self.redshift_conn_id = redshift_conn_id
         self.sql = sql
@@ -37,5 +37,5 @@ class LoadDimensionOperator(BaseOperator):
         custom_sql = "INSERT INTO {} {}".format(self.table, self.sql)
         redshift.run(custom_sql)        
         
-        self.log.info("Success: Inserting values on {}, {} loaded.".format(self.table, self.task_id))
+        self.log.info("Success: Inserting values on {}, loaded.".format(self.table))#, self.task_id))
         
